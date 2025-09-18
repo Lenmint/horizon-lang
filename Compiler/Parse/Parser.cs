@@ -136,6 +136,7 @@ public class Parser
                 break;
 
             case TokenKind.Null:
+                Move();
                 expression = new NullExpression();
                 break;
 
