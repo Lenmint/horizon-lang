@@ -1,3 +1,5 @@
+using HorizonCompiler.Evaluate;
+using HorizonCompiler.Evaluate.Values;
 using HorizonCompiler.Tokenize;
 using HorizonCompiler.Parse;
 
@@ -13,6 +15,7 @@ public static class HCompiler
     {
         var lexer = new Lexer();
         var parser = new Parser();
+        var interpreter = new Interpreter();
 
         foreach (var file in files)
         {
@@ -25,12 +28,27 @@ public static class HCompiler
             // Create tree from tokens
             var tree = parser.ProduceTree(tokens);
 
-            // TODO: Evaluate tree
+            // Evaluate tree
+            List<Value> values = [];
+            foreach (var member in tree.body)
+            {
+                var value = interpreter.Evaluate(member);
+                values.Add(value);
+            }
 
 #if DEBUG
-            // Print tree
+            // ========= Print values ==========
+            // Print file name
             Console.WriteLine($"({file.Name})");
-            Console.WriteLine(JsonConvert.SerializeObject(tree, Formatting.Indented));
+
+            // Print tokens
+            //Console.WriteLine(JsonConvert.SerializeObject(tokens, Formatting.Indented) + "\n");
+
+            // Print tree
+            //Console.WriteLine(JsonConvert.SerializeObject(tree, Formatting.Indented) + "\n");
+
+            // Print evaluated values
+            Console.WriteLine(JsonConvert.SerializeObject(values, Formatting.Indented));
 #endif
 
             // HINT: =================== TEMPORARY ===================
