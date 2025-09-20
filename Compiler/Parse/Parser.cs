@@ -118,68 +118,92 @@ public class Parser
     private Expression ParsePrimaryExpression()
     {
         Expression expression;
+        var token = Current();
 
-        switch (Current().kind)
+        try
         {
-            case TokenKind.OpenParen:
-                Move();
-                expression = ParseExpression();
-                MoveAndExpect(TokenKind.CloseParen);
-                break;
+            switch (token.kind)
+            {
+                case TokenKind.OpenParen:
+                    Move();
+                    expression = ParseExpression();
+                    MoveAndExpect(TokenKind.CloseParen);
+                    break;
 
-            case TokenKind.Identifier:
-                expression = new IdentifierExpression(Move().value);
-                break;
+                case TokenKind.Identifier:
+                    expression = new IdentifierExpression(Move().value);
+                    break;
 
-            case TokenKind.Boolean:
-                expression = new BooleanExpression(bool.Parse(Move().value));
-                break;
+                case TokenKind.Boolean:
+                    expression = new BooleanExpression(bool.Parse(Move().value));
+                    break;
 
-            case TokenKind.Null:
-                Move();
-                expression = new NullExpression();
-                break;
+                case TokenKind.Null:
+                    Move();
+                    expression = new NullExpression();
+                    break;
 
-            case TokenKind.String:
-                expression = new StringExpression(Move().value);
-                break;
+                case TokenKind.String:
+                    expression = new StringExpression(Move().value);
+                    break;
 
-            case TokenKind.Char:
-                expression = new CharExpression(Move().value[0]);
-                break;
+                case TokenKind.Char:
+                    expression = new CharExpression(Move().value[0]);
+                    break;
 
-            #region Numeric
+                #region Numeric
 
-            case TokenKind.Integer:
-                expression = new IntegerExpression(int.Parse(Move().value));
-                break;
+                case TokenKind.Integer:
+                    expression = new IntegerExpression(int.Parse(Move().value));
+                    break;
 
-            case TokenKind.Float:
-                expression = new FloatExpression(float.Parse(Move().value));
-                break;
+                case TokenKind.Float:
+                    expression = new FloatExpression(float.Parse(Move().value));
+                    break;
 
-            case TokenKind.Long:
-                expression = new LongExpression(long.Parse(Move().value));
-                break;
+                case TokenKind.Long:
+                    expression = new LongExpression(long.Parse(Move().value));
+                    break;
 
-            case TokenKind.Double:
-                expression = new DoubleExpression(double.Parse(Move().value));
-                break;
+                case TokenKind.Double:
+                    expression = new DoubleExpression(double.Parse(Move().value));
+                    break;
 
-            case TokenKind.Byte:
-                expression = new ByteExpression(byte.Parse(Move().value));
-                break;
+                case TokenKind.Byte:
+                    expression = new ByteExpression(byte.Parse(Move().value));
+                    break;
 
-            #endregion
+                #endregion
 
-            default:
-                expression = null!;
+                default:
+                    expression = null!;
 
-                Console.WriteLine(
-                    $"Invalid or unimplemented token [{Current().kind}] at [{Current().start}, {Current().end}]"
-                );
-                Environment.Exit(1);
-                break;
+                    Console.WriteLine(
+                        $"Invalid or unimplemented token [{Current().kind}] at [{Current().start}, {Current().end}]"
+                    );
+                    Environment.Exit(1);
+                    break;
+            }
+        }
+        catch (FormatException) // Like int.parse float.parse
+        {
+            // For C# Compiler
+            expression = null!;
+
+            Console.WriteLine(
+                $"[Parser] Cannot parsing this value [{token.value}] to token of type [{token.kind}]: at [{token.start}, {token.end}]"
+            );
+            Environment.Exit(1);
+        }
+        catch (Exception)
+        {
+            // For C# Compiler
+            expression = null!;
+
+            Console.WriteLine(
+                $"[Parser] Unexpected error while parsing token: [{token}]"
+            );
+            Environment.Exit(1);
         }
 
         return expression;
