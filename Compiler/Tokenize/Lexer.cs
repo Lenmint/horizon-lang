@@ -645,7 +645,7 @@ public class Lexer
     /// Check if the file content is end
     /// </summary>
     /// <returns></returns>
-    private bool IsEmpty() => _position >= _content.Length - 1;
+    private bool IsEmpty() => _position >= _content.Length;
 
     /// <summary>
     /// Get current active character
