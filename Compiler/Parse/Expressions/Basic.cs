@@ -4,7 +4,10 @@ namespace HorizonCompiler.Parse.Expressions;
 
 public class ObjectExpression(object? value, NodeKind kind) : Expression(kind)
 {
-    public readonly object? value = value;
+    public virtual object? GetValue()
+    {
+        return value;
+    }
 }
 
 public class NullExpression() : ObjectExpression(null, NodeKind.Null);

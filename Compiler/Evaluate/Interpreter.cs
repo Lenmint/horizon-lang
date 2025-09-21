@@ -14,28 +14,28 @@ public class Interpreter
                 return new NullValue();
 
             case NodeKind.Byte:
-                return new ByteValue((byte)((ByteExpression)statement).value!);
+                return new ByteValue((byte)((ObjectExpression)statement).GetValue()!);
 
             case NodeKind.Integer:
-                return new IntegerValue((int)((IntegerExpression)statement).value!);
+                return new IntegerValue((int)((ObjectExpression)statement).GetValue()!);
 
             case NodeKind.Long:
-                return new LongValue((long)((LongExpression)statement).value!);
+                return new LongValue((long)((ObjectExpression)statement).GetValue()!);
 
             case NodeKind.Float:
-                return new FloatValue((float)((FloatExpression)statement).value!);
+                return new FloatValue((float)((ObjectExpression)statement).GetValue()!);
 
             case NodeKind.Double:
-                return new DoubleValue((double)((DoubleExpression)statement).value!);
+                return new DoubleValue((double)((ObjectExpression)statement).GetValue()!);
 
             case NodeKind.Char:
-                return new CharValue((char)((CharExpression)statement).value!);
+                return new CharValue((char)((ObjectExpression)statement).GetValue()!);
 
             case NodeKind.String:
-                return new StringValue((string)((StringExpression)statement).value!);
+                return new StringValue((string)((ObjectExpression)statement).GetValue()!);
 
             case NodeKind.Boolean:
-                return new BooleanValue((bool)((BooleanExpression)statement).value!);
+                return new BooleanValue((bool)((ObjectExpression)statement).GetValue()!);
 
             #region Compliex Expressions
 
