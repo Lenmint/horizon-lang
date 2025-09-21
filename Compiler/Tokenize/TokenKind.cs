@@ -43,4 +43,5 @@ public enum TokenKind
     CloseBracket, //            ]
 
     EndOfFile, //               End of the file
+    EmptyToken, //              Like comments
 }

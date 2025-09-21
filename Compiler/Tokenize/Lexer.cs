@@ -58,7 +58,9 @@ public class Lexer
                 continue;
             }
 
-            tokens.Add(ProduceTokens());
+            var token = ProduceTokens();
+            if (token.kind is not TokenKind.EmptyToken)
+                tokens.Add(token);
         }
 
         // Create [EndOfFile] token
@@ -599,6 +601,22 @@ public class Lexer
                     return MakeToken(TokenKind.AssignmentOperator, "/=");
                 }
 
+                if (!IsEmpty() && Current() == '/')
+                {
+                    // One line Comment detected
+                    Move();
+                    RemoveOneLineComment();
+                    return MakeToken(TokenKind.EmptyToken, "");
+                }
+
+                if (!IsEmpty() && Current() == '*')
+                {
+                    // Multi lines Comment detected
+                    Move();
+                    RemoveMultiLineComment();
+                    return MakeToken(TokenKind.EmptyToken, "");
+                }
+
                 return MakeToken(TokenKind.BinaryOperator, "/");
             }
 
@@ -680,4 +698,45 @@ public class Lexer
     private bool IsAlphabet() => Current() is >= 'a' and <= 'z' or >= 'A' and <= 'Z';
 
     #endregion
+
+    private void RemoveOneLineComment()
+    {
+        while (!IsEmpty())
+        {
+            if (Current() == '\n')
+            {
+                // End of comment
+                break;
+            }
+
+            Move();
+        }
+    }
+
+    private void RemoveMultiLineComment()
+    {
+        var isEnd = false;
+        while (!IsEmpty())
+        {
+            var c = Current();
+            if (Current() == '*')
+            {
+                Move();
+
+                if (Current() == '/')
+                {
+                    // End of comment
+                    Move();
+                    isEnd = true;
+                    break;
+                }
+            }
+
+            Move();
+        }
+
+        if (isEnd) return;
+        Console.WriteLine("Expected an end for the comment.");
+        Environment.Exit(1);
+    }
 }
