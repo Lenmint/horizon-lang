@@ -2,23 +2,32 @@ using HorizonCompiler.Parse.Core;
 
 namespace HorizonCompiler.Evaluate.Values;
 
-public class Value(object value, NodeKind kind)
+public class Value(object? value, NodeKind kind)
 {
     public readonly object? value = value;
     public readonly NodeKind kind = kind;
 }
 
-public class NullValue() : Value(null!, NodeKind.Null);
+public class NullValue() : Value(null, NodeKind.Null);
 
-public class BooleanValue(bool value) : Value(value, NodeKind.Boolean);
+public class BooleanValue(bool value) : Value(value, NodeKind.Boolean)
+{
+    public new readonly bool value = value;
+}
 
-public class StringValue(string value): Value(value, NodeKind.String);
+public class StringValue(string value): Value(value, NodeKind.String)
+{
+    public new readonly string value = value;
+}
 
 #region Numeric
 
 public class NumberValue(object value, NodeKind kind) : Value(value, kind);
 
-public class CharValue(char value): NumberValue(value, NodeKind.Char);
+public class CharValue(char value): NumberValue(value, NodeKind.Char)
+{
+    public new readonly char value = value;
+}
 
 public class IntegerValue(int value) : NumberValue(value, NodeKind.Integer)
 {
