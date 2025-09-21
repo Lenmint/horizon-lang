@@ -8,6 +8,7 @@ Horizon is an open-source project and high-level programming language.
 - Macros
 - Data Types
     - Integer, Float, Double, Long
+    - Boolean
     - Byte
     - Char
     - String
