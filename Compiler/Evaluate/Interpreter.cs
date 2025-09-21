@@ -920,35 +920,6 @@ public class Interpreter
                     // Double + String => String
                     case NumberValue when left.kind is NodeKind.Double && right is StringValue:
                         return new StringValue((double)left.value! + (string)right.value!);
-
-                    // Char + Char  => Int
-                    case CharValue when right is CharValue:
-                        return new IntegerValue((char)left.value! + (char)right.value!);
-                    // Char + Int => Int
-                    case CharValue when right is NumberValue && right.kind is NodeKind.Integer:
-                        return new IntegerValue((char)left.value! + (int)right.value!);
-                    // Char + Long => Long
-                    case CharValue when right is NumberValue && right.kind is NodeKind.Long:
-                        return new LongValue((char)left.value! + (long)right.value!);
-                    // Char + Float => Float
-                    case CharValue when right is NumberValue && right.kind is NodeKind.Float:
-                        return new FloatValue((char)left.value! + (float)right.value!);
-                    // Char + Double => Double
-                    case CharValue when right is NumberValue && right.kind is NodeKind.Double:
-                        return new DoubleValue((char)left.value! + (double)right.value!);
-
-                    // Int + Char => Int
-                    case NumberValue when left.kind is NodeKind.Integer && right is CharValue:
-                        return new IntegerValue((int)left.value! + (char)right.value!);
-                    // Long + Char => Long
-                    case NumberValue when left.kind is NodeKind.Long && right is CharValue:
-                        return new LongValue((long)left.value! + (char)right.value!);
-                    // Float + Char => Float
-                    case NumberValue when left.kind is NodeKind.Float && right is CharValue:
-                        return new FloatValue((float)left.value! + (char)right.value!);
-                    // Double + Char => Double
-                    case NumberValue when right.kind is NodeKind.Double && right is CharValue:
-                        return new DoubleValue((double)left.value! + (char)right.value!);
                 }
             }
         }
