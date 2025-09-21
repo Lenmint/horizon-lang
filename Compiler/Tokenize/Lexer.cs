@@ -7,7 +7,8 @@ namespace HorizonCompiler.Tokenize;
 /// </summary>
 public class Lexer
 {
-    private List<char> _content = [];
+    private string _content = "";
+    private int _position;
     private int _line = 1;
     private int _column;
 
@@ -38,7 +39,7 @@ public class Lexer
         Defaults();
 
         // Get char list
-        _content = content.ToCharArray().ToList();
+        _content = content;
 
         // Create list of tokens
         var tokens = new List<Token>();
@@ -271,7 +272,7 @@ public class Lexer
                 if (Current() is 'u')
                 {
                     escape += Move();
-                    if (_content.Count >= 4)
+                    if (_content.Length >= 4)
                     {
                         for (var i = 0; i < 4; i++)
                         {
@@ -293,7 +294,7 @@ public class Lexer
                 else if (Current() is 'x')
                 {
                     escape += Move();
-                    if (_content.Count >= 2)
+                    if (_content.Length >= 2)
                     {
                         for (var i = 0; i < 2; i++)
                         {
@@ -352,7 +353,7 @@ public class Lexer
             if (Current() is 'u')
             {
                 escape += Move();
-                if (_content.Count >= 4)
+                if (_content.Length >= 4)
                 {
                     for (var i = 0; i < 4; i++)
                     {
@@ -374,7 +375,7 @@ public class Lexer
             else if (Current() is 'x')
             {
                 escape += Move();
-                if (_content.Count >= 2)
+                if (_content.Length >= 2)
                 {
                     for (var i = 0; i < 2; i++)
                     {
@@ -644,12 +645,12 @@ public class Lexer
     /// Check if the file content is end
     /// </summary>
     /// <returns></returns>
-    private bool IsEmpty() => _content.Count == 0;
+    private bool IsEmpty() => _position >= _content.Length - 1;
 
     /// <summary>
     /// Get current active character
     /// </summary>
-    private char Current() => _content[0];
+    private char Current() => _content[_position];
 
     /// <summary>
     /// Move one character
@@ -658,9 +659,8 @@ public class Lexer
     private char Move()
     {
         _column++;
-
-        var item = _content[0];
-        _content.RemoveAt(0);
+        var item = Current();
+        _position++;
         return item;
     }
 
