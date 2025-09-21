@@ -1,26 +1,35 @@
 
 # Horizon Programming Language
 
-Horizon is a high-level programming language.
+Horizon is an open-source project and high-level programming language.
 
-## Features
+## Todo Features
 
-- [ ] Data Types
-- [ ] Variables
-- [ ] Scopes
-- [ ] Functions
-- [ ] Classes / Structs
-- [ ] Packages
-- [ ] Lambda expression
-- [ ] Async/Await
+- Macros
+- Data Types
+    - Integer, Float, Double, Long
+    - Byte
+    - Char
+    - String
+        - Normal String
+        - Template String
+        - Raw String
+- Variables
+- Scopes
+- Functions
+- Classes / Structs
+- Packages
+- Lambda expression
+- Async/Await
+- Debugging
 
 ## Example
 
-```cs
+```csharp
 package example;
 
 void main() 
 {
-    Console.writeln("Hello World");
+    Console::writeln("Hello World");
 }
 ```
