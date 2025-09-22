@@ -24,10 +24,17 @@ public abstract class Program
                 Console.WriteLine($"Invalid file path: {arg}");
                 return;
             }
-            
+
             files.Add(new FileInfo(arg));
         }
-        
-        HCompiler.Compile(files);
+
+        try
+        {
+            HCompiler.Compile(files);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e.ToString());
+        }
     }
 }
