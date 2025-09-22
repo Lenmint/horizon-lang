@@ -698,7 +698,6 @@ public class Lexer
         var isEnd = false;
         while (!IsEmpty())
         {
-            var c = Current();
             if (Current() == '*')
             {
                 Move();
@@ -710,6 +709,14 @@ public class Lexer
                     isEnd = true;
                     break;
                 }
+
+                continue;
+            }
+
+            if (Current() == '\n')
+            {
+                _line++;
+                _column = 0;
             }
 
             Move();
