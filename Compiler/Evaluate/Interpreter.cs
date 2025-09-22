@@ -88,19 +88,19 @@ public class Interpreter
                     switch (expression.operation)
                     {
                         case "+":
-                            value = (double)left.value! + (int)right.value!;
+                            value = (byte)left.value! + (int)right.value!;
                             break;
                         case "-":
-                            value = (double)left.value! - (int)right.value!;
+                            value = (byte)left.value! - (int)right.value!;
                             break;
                         case "*":
-                            value = (double)left.value! * (int)right.value!;
+                            value = (byte)left.value! * (int)right.value!;
                             break;
                         case "/":
-                            value = (double)left.value! / (int)right.value!;
+                            value = (byte)left.value! / (int)right.value!;
                             break;
                         case "%":
-                            value = (double)left.value! % (int)right.value!;
+                            value = (byte)left.value! % (int)right.value!;
                             break;
                     }
 
@@ -110,19 +110,19 @@ public class Interpreter
                     switch (expression.operation)
                     {
                         case "+":
-                            value = (double)left.value! + (float)right.value!;
+                            value = (byte)left.value! + (float)right.value!;
                             break;
                         case "-":
-                            value = (double)left.value! - (float)right.value!;
+                            value = (byte)left.value! - (float)right.value!;
                             break;
                         case "*":
-                            value = (double)left.value! * (float)right.value!;
+                            value = (byte)left.value! * (float)right.value!;
                             break;
                         case "/":
-                            value = (double)left.value! / (float)right.value!;
+                            value = (byte)left.value! / (float)right.value!;
                             break;
                         case "%":
-                            value = (double)left.value! % (float)right.value!;
+                            value = (byte)left.value! % (float)right.value!;
                             break;
                     }
 
@@ -132,19 +132,19 @@ public class Interpreter
                     switch (expression.operation)
                     {
                         case "+":
-                            value = (double)left.value! + (long)right.value!;
+                            value = (byte)left.value! + (long)right.value!;
                             break;
                         case "-":
-                            value = (double)left.value! - (long)right.value!;
+                            value = (byte)left.value! - (long)right.value!;
                             break;
                         case "*":
-                            value = (double)left.value! * (long)right.value!;
+                            value = (byte)left.value! * (long)right.value!;
                             break;
                         case "/":
-                            value = (double)left.value! / (long)right.value!;
+                            value = (byte)left.value! / (long)right.value!;
                             break;
                         case "%":
-                            value = (double)left.value! % (long)right.value!;
+                            value = (byte)left.value! % (long)right.value!;
                             break;
                     }
 
@@ -154,19 +154,19 @@ public class Interpreter
                     switch (expression.operation)
                     {
                         case "+":
-                            value = (double)left.value! + (double)right.value!;
+                            value = (byte)left.value! + (double)right.value!;
                             break;
                         case "-":
-                            value = (double)left.value! - (double)right.value!;
+                            value = (byte)left.value! - (double)right.value!;
                             break;
                         case "*":
-                            value = (double)left.value! * (double)right.value!;
+                            value = (byte)left.value! * (double)right.value!;
                             break;
                         case "/":
-                            value = (double)left.value! / (double)right.value!;
+                            value = (byte)left.value! / (double)right.value!;
                             break;
                         case "%":
-                            value = (double)left.value! % (double)right.value!;
+                            value = (byte)left.value! % (double)right.value!;
                             break;
                     }
 
@@ -790,19 +790,19 @@ public class Interpreter
                     switch (expression.operation)
                     {
                         case "+":
-                            value = (double)left.value! + (int)right.value!;
+                            value = (char)left.value! + (int)right.value!;
                             break;
                         case "-":
-                            value = (double)left.value! - (int)right.value!;
+                            value = (char)left.value! - (int)right.value!;
                             break;
                         case "*":
-                            value = (double)left.value! * (int)right.value!;
+                            value = (char)left.value! * (int)right.value!;
                             break;
                         case "/":
-                            value = (double)left.value! / (int)right.value!;
+                            value = (char)left.value! / (int)right.value!;
                             break;
                         case "%":
-                            value = (double)left.value! % (int)right.value!;
+                            value = (char)left.value! % (int)right.value!;
                             break;
                     }
 
@@ -812,19 +812,19 @@ public class Interpreter
                     switch (expression.operation)
                     {
                         case "+":
-                            value = (double)left.value! + (float)right.value!;
+                            value = (char)left.value! + (float)right.value!;
                             break;
                         case "-":
-                            value = (double)left.value! - (float)right.value!;
+                            value = (char)left.value! - (float)right.value!;
                             break;
                         case "*":
-                            value = (double)left.value! * (float)right.value!;
+                            value = (char)left.value! * (float)right.value!;
                             break;
                         case "/":
-                            value = (double)left.value! / (float)right.value!;
+                            value = (char)left.value! / (float)right.value!;
                             break;
                         case "%":
-                            value = (double)left.value! % (float)right.value!;
+                            value = (char)left.value! % (float)right.value!;
                             break;
                     }
 
@@ -834,19 +834,19 @@ public class Interpreter
                     switch (expression.operation)
                     {
                         case "+":
-                            value = (double)left.value! + (long)right.value!;
+                            value = (char)left.value! + (long)right.value!;
                             break;
                         case "-":
-                            value = (double)left.value! - (long)right.value!;
+                            value = (char)left.value! - (long)right.value!;
                             break;
                         case "*":
-                            value = (double)left.value! * (long)right.value!;
+                            value = (char)left.value! * (long)right.value!;
                             break;
                         case "/":
-                            value = (double)left.value! / (long)right.value!;
+                            value = (char)left.value! / (long)right.value!;
                             break;
                         case "%":
-                            value = (double)left.value! % (long)right.value!;
+                            value = (char)left.value! % (long)right.value!;
                             break;
                     }
 
@@ -856,19 +856,19 @@ public class Interpreter
                     switch (expression.operation)
                     {
                         case "+":
-                            value = (double)left.value! + (double)right.value!;
+                            value = (char)left.value! + (double)right.value!;
                             break;
                         case "-":
-                            value = (double)left.value! - (double)right.value!;
+                            value = (char)left.value! - (double)right.value!;
                             break;
                         case "*":
-                            value = (double)left.value! * (double)right.value!;
+                            value = (char)left.value! * (double)right.value!;
                             break;
                         case "/":
-                            value = (double)left.value! / (double)right.value!;
+                            value = (char)left.value! / (double)right.value!;
                             break;
                         case "%":
-                            value = (double)left.value! % (double)right.value!;
+                            value = (char)left.value! % (double)right.value!;
                             break;
                     }
 
