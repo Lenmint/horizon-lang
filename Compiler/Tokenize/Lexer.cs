@@ -152,6 +152,7 @@ public class Lexer
 
     private Token MakeIdentifierToken()
     {
+        var startColumn = _column;
         var identifier = "";
         var first_is_alpha = false;
 
@@ -175,9 +176,7 @@ public class Lexer
         // Check if key is written only from '_' character.
         if (identifier.Trim(['_']) == string.Empty)
         {
-            Console.WriteLine($"Invalid identifier name: '{identifier}'.");
-            Environment.Exit(1);
-            return null!;
+            throw new LexerException($"Invalid identifier name: '{identifier}'.", _line, startColumn);
         }
 
         // Handle recursive keywords and identifiers.
@@ -188,6 +187,7 @@ public class Lexer
 
     private Token MakeNumberToken(bool dotStarted)
     {
+        var startColumn = _column - (dotStarted ? 1 : 0); // 1 for start dot 
         var number = dotStarted ? "0." : "";
 
         var isFloat = dotStarted;
@@ -247,9 +247,7 @@ public class Lexer
 
                 if (int.Parse(number) is >= 0 and <= 255) return MakeToken(TokenKind.Byte, number);
 
-                Console.WriteLine($"Invalid byte value: '{number}'.");
-                Environment.Exit(1);
-                return null!;
+                throw new LexerException($"Invalid byte value: '{number}'.", _line, startColumn);
 
             default:
             {
@@ -260,6 +258,7 @@ public class Lexer
 
     private Token MakeStringToken()
     {
+        var startColumn = _column;
         Move();
         var value = "";
         var escapesLength = 0;
@@ -280,8 +279,7 @@ public class Lexer
                         {
                             if (!IsAlphabet() && !IsInteger())
                             {
-                                Console.WriteLine("Invalid Unicode escape sequence.");
-                                Environment.Exit(1);
+                                throw new LexerException("Invalid Unicode escape sequence.", _line, _column);
                             }
 
                             escape += Move();
@@ -289,8 +287,7 @@ public class Lexer
                     }
                     else
                     {
-                        Console.WriteLine("Incomplete Unicode escape sequence.");
-                        Environment.Exit(1);
+                        throw new LexerException("Incomplete Unicode escape sequence.", _line, _column);
                     }
                 }
                 else if (Current() is 'x')
@@ -302,8 +299,7 @@ public class Lexer
                         {
                             if (!IsAlphabet() && !IsInteger())
                             {
-                                Console.WriteLine("Invalid Hexadecimal escape sequence.");
-                                Environment.Exit(1);
+                                throw new LexerException("Invalid Hexadecimal escape sequence.", _line, _column);
                             }
 
                             escape += Move();
@@ -311,8 +307,7 @@ public class Lexer
                     }
                     else
                     {
-                        Console.WriteLine("Incomplete Hexadecimal escape sequence.");
-                        Environment.Exit(1);
+                        throw new LexerException("Incomplete Hexadecimal escape sequence.", _line, _column);
                     }
                 }
                 else escape += Move();
@@ -336,13 +331,12 @@ public class Lexer
             return MakeToken(TokenKind.String, value,
                 2 + escapesLength); // Offset: String quotes count + escapes length if exist
 
-        Console.WriteLine("Missing string closing quote.");
-        Environment.Exit(1);
-        return null!;
+        throw new LexerException("Missing string closing quote.", _line, startColumn);
     }
 
     private Token MakeCharToken()
     {
+        var startColumn = _column;
         string value;
         var escape = string.Empty;
 
@@ -361,8 +355,7 @@ public class Lexer
                     {
                         if (!IsAlphabet() && !IsInteger())
                         {
-                            Console.WriteLine("Invalid Unicode escape sequence.");
-                            Environment.Exit(1);
+                            throw new LexerException("Invalid Unicode escape sequence.", _line, _column);
                         }
 
                         escape += Move();
@@ -370,8 +363,7 @@ public class Lexer
                 }
                 else
                 {
-                    Console.WriteLine("Incomplete Unicode escape sequence.");
-                    Environment.Exit(1);
+                    throw new LexerException("Incomplete Unicode escape sequence.", _line, _column);
                 }
             }
             else if (Current() is 'x')
@@ -383,8 +375,7 @@ public class Lexer
                     {
                         if (!IsAlphabet() && !IsInteger())
                         {
-                            Console.WriteLine("Invalid Hexadecimal escape sequence.");
-                            Environment.Exit(1);
+                            throw new LexerException("Invalid Hexadecimal escape sequence.", _line, _column);
                         }
 
                         escape += Move();
@@ -392,8 +383,7 @@ public class Lexer
                 }
                 else
                 {
-                    Console.WriteLine("Incomplete Hexadecimal escape sequence.");
-                    Environment.Exit(1);
+                    throw new LexerException("Incomplete Hexadecimal escape sequence.", _line, _column);
                 }
             }
             else
@@ -405,16 +395,12 @@ public class Lexer
         {
             if (Current() == '\'')
             {
-                Console.WriteLine("Missing char value");
-                Environment.Exit(1);
-                return null!;
+                throw new LexerException("Missing char value", _line, startColumn);
             }
 
             if (Current() != ' ' && IsSkippable())
             {
-                Console.WriteLine("Invalid character.");
-                Environment.Exit(1);
-                return null!;
+                throw new LexerException("Invalid char character.", _line, _column);
             }
 
             value = Move().ToString();
@@ -422,16 +408,12 @@ public class Lexer
 
         if (value.Length is > 1 or 0)
         {
-            Console.WriteLine("Char expect one character only.");
-            Environment.Exit(1);
-            return null!;
+            throw new LexerException("Char expect one character only.", _line, startColumn);
         }
 
         if (Current() != '\'')
         {
-            Console.WriteLine("Missing char closing quote.");
-            Environment.Exit(1);
-            return null!;
+            throw new LexerException("Missing char closing quote.", _line, startColumn);
         }
 
         Move();
@@ -441,6 +423,7 @@ public class Lexer
 
     private Token MakeOperatorToken()
     {
+        var startColumn = _column;
         switch (Current())
         {
             case '=':
@@ -509,9 +492,7 @@ public class Lexer
                     return MakeToken(TokenKind.JointOperator, "||");
                 }
 
-                Console.WriteLine("Missing second vertical bar: |.");
-                Environment.Exit(1);
-                return null!;
+                throw new LexerException("Invalid operator: \"|\"", _line, _column);
             }
 
             case '&':
@@ -634,9 +615,7 @@ public class Lexer
 
             default:
             {
-                Console.WriteLine($"Unimplemented or Invalid token: '{Current()}'");
-                Environment.Exit(1);
-                return null!;
+                throw new LexerException($"Unimplemented or Invalid token: '{Current()}'", _line, _column);
             }
         }
     }
@@ -715,6 +694,7 @@ public class Lexer
 
     private void RemoveMultiLineComment()
     {
+        var startColumn = _column - 2; // 2 for start comment signs '/*'
         var isEnd = false;
         while (!IsEmpty())
         {
@@ -736,7 +716,6 @@ public class Lexer
         }
 
         if (isEnd) return;
-        Console.WriteLine("Expected an end for the comment.");
-        Environment.Exit(1);
+        throw new LexerException("Missing end for the multi-line comment.", _line, startColumn);
     }
 }
