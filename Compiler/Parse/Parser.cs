@@ -175,6 +175,27 @@ public class Parser
 
                 #endregion
 
+                // Parse negative and positive numbers with signs like -90 , +7
+                case TokenKind.BinaryOperator:
+                {
+                    var sign = Move().value;
+
+                    if (sign is not ("+" or "-"))
+                        throw new Exception("Invalid numeric sign.");
+
+                    var numExpr = (ObjectExpression)ParsePrimaryExpression();
+                    var modifier = sign == "-" ? -1 : 1;
+
+                    return numExpr.kind switch
+                    {
+                        NodeKind.Integer => new IntegerExpression((int)numExpr.GetValue()! * modifier),
+                        NodeKind.Float => new FloatExpression((float)numExpr.GetValue()! * modifier),
+                        NodeKind.Long => new LongExpression((long)numExpr.GetValue()! * modifier),
+                        NodeKind.Double => new DoubleExpression((double)numExpr.GetValue()! * modifier),
+                        _ => throw new Exception("Expected number value. after '+' or '-' sign.")
+                    };
+                }
+
                 default:
                     expression = null!;
 
