@@ -1,3 +1,4 @@
+using HorizonCompiler.Parse.Core;
 using HorizonCompiler.Tokenize;
 
 namespace HorizonCompiler;
@@ -40,5 +41,17 @@ public class ParserException : BaseException
         if (token != null)
             return $"[Error] [Parser] Token: [{token.kind}] at [{token.start}, {token.end}] " + base.ToString();
         return "[Error] [Parser] " + base.ToString();
+    }
+}
+
+public class InterpreterException : BaseException
+{
+    public InterpreterException() : base() { }
+
+    public InterpreterException(string message) : base(message) { }
+
+    public override string ToString()
+    {
+        return "[Error] [Interpreter] " + base.ToString();
     }
 }

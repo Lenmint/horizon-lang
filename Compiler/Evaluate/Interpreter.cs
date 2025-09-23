@@ -45,9 +45,7 @@ public class Interpreter
             #endregion
         }
 
-        Console.WriteLine($"This AST Node [{statement.kind}] is not implemented yet");
-        Environment.Exit(1);
-        throw new Exception();
+        throw new InterpreterException($"This AST Node [{statement.kind}] is not implemented yet");
     }
 
     public Value EvaluateBinaryExpression(BinaryExpression expression)
@@ -924,8 +922,6 @@ public class Interpreter
             }
         }
 
-        Console.WriteLine($"Cannot do operation [{expression.operation}] for those types [{left.kind}, {right.kind}]");
-        Environment.Exit(1);
-        throw new Exception();
+        throw new InterpreterException($"Cannot do operation [{expression.operation}] for those types [{left.kind}, {right.kind}]");
     }
 }
