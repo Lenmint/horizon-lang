@@ -55,3 +55,15 @@ public class InterpreterException : BaseException
         return "[Error] [Interpreter] " + base.ToString();
     }
 }
+
+public class ScopeException : BaseException
+{
+    public ScopeException() { }
+
+    public ScopeException(string message) : base(message) { }
+
+    public override string ToString()
+    {
+        return "[Error] [Interpreter.Scope] " + base.ToString();
+    }
+}
