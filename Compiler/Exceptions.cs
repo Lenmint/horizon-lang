@@ -21,3 +21,24 @@ public class LexerException(string message, int line, int column) : BaseExceptio
         return $"[Error] [Lexer] Location: {line}:{column} " + base.ToString();
     }
 }
+
+public class ParserException : BaseException
+{
+    public readonly Token? token = null;
+
+    public ParserException() : base() { }
+
+    public ParserException(string message) : base(message) { }
+
+    public ParserException(string message, Token token) : base(message)
+    {
+        this.token = token;
+    }
+
+    public override string ToString()
+    {
+        if (token != null)
+            return $"[Error] [Parser] Token: [{token.kind}] at [{token.start}, {token.end}] " + base.ToString();
+        return "[Error] [Parser] " + base.ToString();
+    }
+}

@@ -178,10 +178,11 @@ public class Parser
                 // Parse negative and positive numbers with signs like -90 , +7
                 case TokenKind.BinaryOperator:
                 {
-                    var sign = Move().value;
+                    var signToken = Move();
+                    var sign = signToken.value;
 
                     if (sign is not ("+" or "-"))
-                        throw new Exception("Invalid numeric sign.");
+                        throw new ParserException($"Invalid numeric sign: '{sign}'", signToken);
 
                     var numExpr = (ObjectExpression)ParsePrimaryExpression();
                     var modifier = sign == "-" ? -1 : 1;
@@ -192,39 +193,23 @@ public class Parser
                         NodeKind.Float => new FloatExpression((float)numExpr.GetValue()! * modifier),
                         NodeKind.Long => new LongExpression((long)numExpr.GetValue()! * modifier),
                         NodeKind.Double => new DoubleExpression((double)numExpr.GetValue()! * modifier),
-                        _ => throw new Exception("Expected number value. after '+' or '-' sign.")
+                        _ => throw new ParserException($"Expected number value. after '{sign}' sign.")
                     };
                 }
 
                 default:
-                    expression = null!;
-
-                    Console.WriteLine(
-                        $"Invalid or unimplemented token [{Current().kind}] at [{Current().start}, {Current().end}]"
-                    );
-                    Environment.Exit(1);
-                    break;
+                    throw new ParserException("Invalid or unimplemented token", Current());
             }
         }
         catch (FormatException) // Like int.parse float.parse
         {
-            // For C# Compiler
-            expression = null!;
-
-            Console.WriteLine(
+            throw new ParserException(
                 $"[Parser] Cannot parsing this value [{token.value}] to token of type [{token.kind}]: at [{token.start}, {token.end}]"
             );
-            Environment.Exit(1);
         }
         catch (Exception)
         {
-            // For C# Compiler
-            expression = null!;
-
-            Console.WriteLine(
-                $"[Parser] Unexpected error while parsing token: [{token}]"
-            );
-            Environment.Exit(1);
+            throw new ParserException($"[Parser] Unexpected error while parsing token: [{token}]");
         }
 
         return expression;
@@ -262,16 +247,13 @@ public class Parser
     {
         if (IsEmpty())
         {
-            Console.WriteLine($"Expect [{kind}] but file is end.");
-            Environment.Exit(1);
-            return null!;
+            throw new ParserException($"Expect [{kind}] but file is end.");
         }
 
         if (Current().kind == kind) return Move();
 
-        Console.WriteLine($"Expected [{kind}] but found [{Current().kind}] at [{Current().start}, {Current().end}]");
-        Environment.Exit(1);
-        return null!;
+        throw new ParserException(
+            $"Expected [{kind}] but found [{Current().kind}]", Current());
     }
 
     #endregion
