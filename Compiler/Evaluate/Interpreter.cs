@@ -52,9 +52,10 @@ public class Interpreter
 
             case NodeKind.BooleanJointExpression:
                 return EvaluateBooleanJointExpression((BooleanJointExpression)statement);
-            
+
             case NodeKind.BooleanReversExpression:
                 return EvaluateBooleanReversExpression((BooleanReversExpression)statement);
+
             #endregion
         }
 
@@ -935,7 +936,8 @@ public class Interpreter
             }
         }
 
-        throw new InterpreterException($"Cannot do operation [{expression.operation}] for those types [{left.kind}, {right.kind}]");
+        throw new InterpreterException(
+            $"Cannot do operation [{expression.operation}] for those types [{left.kind}, {right.kind}]");
     }
 
     public BooleanValue EvaluateBooleanComparisonExpression(BooleanComparisonExpression expression)
@@ -1720,13 +1722,16 @@ public class Interpreter
         switch (left)
         {
             case BooleanValue when right is BooleanValue:
-                switch(expression.operation) {
+                switch (expression.operation)
+                {
                     case "&&" or "and":
-                        return new BooleanValue((bool) left.value! && (bool) right.value!);
-                    
+                        return new BooleanValue((bool)left.value! && (bool)right.value!);
+
                     case "||" or "or":
-                        return new BooleanValue((bool) left.value! || (bool) right.value!);
+                        return new BooleanValue((bool)left.value! || (bool)right.value!);
                 }
+
+                break;
         }
 
         throw new InterpreterException($"Cannot evaluate joint-comparison for this types: [{left.kind}, {right.kind}]");
@@ -1736,12 +1741,12 @@ public class Interpreter
     {
         var value = Evaluate(expression.expression);
 
-        switch(value)
+        switch (value)
         {
             case BooleanValue:
-                return new BooleanValue(!((bool) value.value!));
+                return new BooleanValue(!((bool)value.value!));
         }
-        
+
         throw new InterpreterException($"Cannot evaluate revers-boolean for this type: [{value.kind}]");
     }
 }
