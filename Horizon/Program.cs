@@ -15,10 +15,41 @@ public abstract class Program
             return;
         }
 
-        // Handle arguments as files
+        // Handle arguments as files and options
         List<FileInfo> files = [];
+        var options = new CompilerOptions();
         foreach (var arg in args)
         {
+            if (arg.StartsWith('-'))
+            {
+                // == Options ==
+
+                switch (arg)
+                {
+                    case "--debug":
+                        options.mode = CompilerOptions.Mode.DEBUG;
+                        break;
+
+                    case "--show-tokens":
+                        options.showTokens = true;
+                        break;
+
+                    case "--show-trees":
+                        options.showTrees = true;
+                        break;
+
+                    case "--show-values":
+                        options.showValues = true;
+                        break;
+
+                    default:
+                        Console.WriteLine($"unknown option provided: '{arg}'");
+                        return;
+                }
+
+                continue;
+            }
+
             if (!File.Exists(arg))
             {
                 Console.WriteLine($"Invalid file path: {arg}");
@@ -30,7 +61,7 @@ public abstract class Program
 
         try
         {
-            HCompiler.Compile(files);
+            HCompiler.Compile(files, options);
         }
         catch (Exception e)
         {
