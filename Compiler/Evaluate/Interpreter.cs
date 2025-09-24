@@ -1,15 +1,19 @@
 using HorizonCompiler.Evaluate.Values;
 using HorizonCompiler.Parse.Core;
 using HorizonCompiler.Parse.Expressions;
+using HorizonCompiler.Parse.Statements;
 
 namespace HorizonCompiler.Evaluate;
 
-public class Interpreter
+public class Interpreter(Scope mainScope)
 {
     private const float EPSILON_FLOAT = 0.0001f;
     private const float EPSILON_FLOAT_SINGLE = 1e-6f;
     private const double EPSILON_DOUBLE = 1e-6;
     private const double EPSILON_DOUBLE_SINGLE = 1e-12d;
+
+    private readonly Scope mainScope = mainScope;
+    private Scope currentScope = mainScope;
 
     public Value Evaluate(Statement statement)
     {
@@ -57,10 +61,47 @@ public class Interpreter
                 return EvaluateBooleanReversExpression((BooleanReversExpression)statement);
 
             #endregion
+
+            #region Statements
+
+            case NodeKind.ScopeStatement:
+                return EvaluateScopeStatement((ScopeStatement)statement);
+
+            #endregion
         }
 
         throw new InterpreterException($"This AST Node [{statement.kind}] is not implemented yet");
     }
+
+    #region Statements
+
+    public Value EvaluateScopeStatement(ScopeStatement statement)
+    {
+        // #### TEMP ################
+        var list = new List<Value>();
+        // ##########################
+        
+        var parentScope = currentScope;
+        var scope = new Scope(parentScope);
+
+        SetCurrentScope(scope);
+
+        foreach (var item in statement.statements)
+        {
+            list.Add(Evaluate(item));
+        }
+
+        SetCurrentScope(parentScope);
+
+        // #### TEMP #########################
+        return new Value(list, NodeKind.Void);
+        // ###################################
+        
+        // #### Actual return value 
+        // return new VoidValue();
+    }
+
+    #endregion
 
     public Value EvaluateBinaryExpression(BinaryExpression expression)
     {
@@ -1749,4 +1790,10 @@ public class Interpreter
 
         throw new InterpreterException($"Cannot evaluate revers-boolean for this type: [{value.kind}]");
     }
+
+    #region Tools
+
+    private void SetCurrentScope(Scope scope) => currentScope = scope;
+
+    #endregion
 }

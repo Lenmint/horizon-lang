@@ -15,7 +15,8 @@ public static class HCompiler
     {
         var lexer = new Lexer();
         var parser = new Parser();
-        var interpreter = new Interpreter();
+        var mainScope = new Scope();
+        var interpreter = new Interpreter(mainScope);
 
         foreach (var file in files)
         {

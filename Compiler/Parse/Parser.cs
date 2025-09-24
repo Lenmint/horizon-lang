@@ -17,21 +17,47 @@ public class Parser
 
         while (!IsEmpty())
         {
-            var statement = Current().kind switch
-            {
-                _ => ParseExpression(),
-            };
-
-            body.Add(statement);
+            body.Add(ParseStatement());
         }
 
         return new Tree(body);
+    }
+
+    private Statement ParseStatement()
+    {
+        return Current().kind switch
+        {
+            TokenKind.OpenBrace => ParseScopeStatement(),
+            _ => ParseExpression(),
+        };
     }
 
     private Expression ParseExpression()
     {
         return ParseBooleanComparisonExpression();
     }
+
+    #region Statements
+
+    public Statement ParseScopeStatement()
+    {
+        Move(); // Skip OpenBrace token
+
+        var list = new List<Statement>();
+
+        while (!IsEmpty() && Current().kind is not TokenKind.CloseBrace)
+        {
+            list.Add(ParseStatement());
+        }
+
+        MoveAndExpect(
+            TokenKind.CloseBrace
+        );
+
+        return new ScopeStatement(list);
+    }
+
+    #endregion
 
     #region Expressions
 

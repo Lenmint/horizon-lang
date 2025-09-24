@@ -8,6 +8,8 @@ public class Value(object? value, NodeKind kind)
     public readonly NodeKind kind = kind;
 }
 
+public class VoidValue() : Value("void", NodeKind.Void);
+
 public class NullValue() : Value(null, NodeKind.Null);
 
 public class BooleanValue(bool value) : Value(value, NodeKind.Boolean)

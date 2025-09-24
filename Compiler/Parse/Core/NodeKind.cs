@@ -3,7 +3,11 @@ namespace HorizonCompiler.Parse.Core;
 public enum NodeKind
 {
     Tree,
+    Void,
 
+    // == Statements
+    ScopeStatement,
+    
     // == Expressions
     BinaryExpression,
     BooleanComparisonExpression,
