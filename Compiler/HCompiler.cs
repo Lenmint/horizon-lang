@@ -3,9 +3,7 @@ using HorizonCompiler.Evaluate.Values;
 using HorizonCompiler.Tokenize;
 using HorizonCompiler.Parse;
 
-#if DEBUG
 using Newtonsoft.Json;
-#endif
 
 namespace HorizonCompiler;
 
