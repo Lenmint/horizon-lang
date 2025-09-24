@@ -7,7 +7,7 @@ public class Scope
     private readonly Scope? parent;
 
     private const int DATA_COUNT = 1;
-    private readonly Dictionary<string, Value>[] data = new Dictionary<string, Value>[DATA_COUNT];
+    private readonly Dictionary<string, DataStore>[] data = new Dictionary<string, DataStore>[DATA_COUNT];
 
     public Scope(Scope? parent = null)
     {
@@ -16,14 +16,13 @@ public class Scope
         // Initialize dictionaries
         for (var i = 0; i < data.Length; i++)
         {
-            data[i] = new Dictionary<string, Value>();
+            data[i] = new Dictionary<string, DataStore>();
         }
     }
 
-    private Value? Find(int dictionary, string key)
+    private DataStore Find(int dictionary, string key)
     {
-        data[dictionary].TryGetValue(key, out var value);
-        return value;
+        return data[dictionary][key];
     }
 
     /// <summary>
@@ -52,16 +51,27 @@ public class Scope
         }
     }
 
-    public Value? Search(int dictionary, string key)
+    public DataStore Search(int dictionary, string key)
     {
         return Evaluate(dictionary, key).Find(dictionary, key);
     }
 
-    public bool Add(int dictionary, string key, Value value)
+    public void Add(int dictionary, string key, DataStore value)
     {
-        return data[dictionary].TryAdd(key, value);
+        if (Contains(dictionary, key))
+            throw new ScopeException($"This key: '{key}' is already defined.");
+
+        data[dictionary].Add(key, value);
     }
 
+    public void Update(int dictionary, string key, DataStore value)
+    {
+        if (!Contains(dictionary, key))
+            throw new ScopeException($"Couldn't find data in this context: [{dictionary}, {key}]");
+
+        data[dictionary][key] = value;
+    }
+    
     public bool Contains(int dictionary, string key)
     {
         return data[dictionary].ContainsKey(key);
