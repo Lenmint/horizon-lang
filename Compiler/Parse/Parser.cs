@@ -78,6 +78,9 @@ public class Parser
             throw new InterpreterException();
         }
 
+        // Require semicolon
+        MoveAndExpect(TokenKind.Semicolon);
+
         return new VariableStatement(declaration.identifier, dynamic, constant, declaration.expression);
     }
 
