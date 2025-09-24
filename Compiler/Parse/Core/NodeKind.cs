@@ -7,6 +7,7 @@ public enum NodeKind
 
     // == Statements
     ScopeStatement,
+    VariableStatement,
     
     // == Expressions
     BinaryExpression,

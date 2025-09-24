@@ -1,3 +1,4 @@
+using HorizonCompiler.Evaluate.DataStoreObjects;
 using HorizonCompiler.Evaluate.Values;
 using HorizonCompiler.Parse.Core;
 using HorizonCompiler.Parse.Expressions;
@@ -19,6 +20,9 @@ public class Interpreter(Scope mainScope)
     {
         switch (statement.kind)
         {
+            case NodeKind.Identifier:
+                return EvaluateIdentifier((IdentifierExpression)statement);
+
             case NodeKind.Null:
                 return new NullValue();
 
@@ -67,6 +71,9 @@ public class Interpreter(Scope mainScope)
             case NodeKind.ScopeStatement:
                 return EvaluateScopeStatement((ScopeStatement)statement);
 
+            case NodeKind.VariableStatement:
+                return EvaluateVariableStatement((VariableStatement)statement);
+
             #endregion
         }
 
@@ -101,7 +108,25 @@ public class Interpreter(Scope mainScope)
         // return new VoidValue();
     }
 
+    private Value EvaluateVariableStatement(VariableStatement statement)
+    {
+        Value value = new NullValue();
+
+        // Check if the variable is iniliazied
+        if (statement.expression != null)
+            value = Evaluate(statement.expression);
+
+        currentScope.Add(0, statement.identifier, new Variable(value, false));
+
+        return new VoidValue();
+    }
+
     #endregion
+
+    private Value EvaluateIdentifier(IdentifierExpression expression)
+    {
+        return ((Variable) currentScope.Search(0, expression.value)).value!;
+    }
 
     public Value EvaluateBinaryExpression(BinaryExpression expression)
     {

@@ -28,6 +28,8 @@ public class Parser
         return Current().kind switch
         {
             TokenKind.OpenBrace => ParseScopeStatement(),
+            TokenKind.Var
+                => ParseVariableStatement(),
             _ => ParseExpression(),
         };
     }
@@ -55,6 +57,47 @@ public class Parser
         );
 
         return new ScopeStatement(list);
+    }
+
+    private VariableStatement ParseVariableStatement()
+    {
+        (string identifier, NodeKind value_kind, Expression? expression) declaration;
+        var dynamic = false;
+        var constant = false;
+        var kind = Move().kind; // Skip Var, Const or (Actual Type like int, float, ...) token
+
+        if (kind is TokenKind.Var)
+        {
+            dynamic = true;
+            constant = false;
+            declaration = ParseVarVariableStatement();
+        }
+        else
+        {
+            // HINT: TEMP: We will not throw any error actually 
+            throw new InterpreterException();
+        }
+
+        return new VariableStatement(declaration.identifier, dynamic, constant, declaration.expression);
+    }
+
+    private (string, NodeKind, Expression?) ParseVarVariableStatement()
+    {
+        var identifierToken = MoveAndExpect(TokenKind.Identifier);
+        var expression = ParseVariableInitializingExpression();
+        
+        // Check if expression kind is null
+        if (expression.kind is NodeKind.Null)
+            throw new ParserException("Cannot initialize dynamic variable with null value");
+        
+        return (identifierToken.value, expression.kind, expression);
+    }
+
+    private Expression ParseVariableInitializingExpression()
+    {
+        MoveAndExpect(TokenKind.EqualsOperator); // Skip '=' token
+        var expression = ParseExpression();
+        return expression;
     }
 
     #endregion

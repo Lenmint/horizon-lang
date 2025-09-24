@@ -12,7 +12,10 @@ public class ObjectExpression(object? value, NodeKind kind) : Expression(kind)
 
 public class NullExpression() : ObjectExpression(null, NodeKind.Null);
 
-public class IdentifierExpression(string value) : ObjectExpression(value, NodeKind.Identifier);
+public class IdentifierExpression(string value) : ObjectExpression(value, NodeKind.Identifier)
+{
+    public readonly string value = value;
+}
 
 #region Numeric
 
