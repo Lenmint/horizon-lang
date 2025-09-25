@@ -29,7 +29,7 @@ public class Parser
         {
             TokenKind.OpenBrace => ParseScopeStatement(),
             TokenKind.Var
-                => ParseVariableStatement(),
+                => RequestSemicolon(ParseVariableStatement),
             _ => ParseExpression(),
         };
     }
@@ -77,9 +77,6 @@ public class Parser
             // HINT: TEMP: We will not throw any error actually 
             throw new InterpreterException();
         }
-
-        // Require semicolon
-        MoveAndExpect(TokenKind.Semicolon);
 
         return new VariableStatement(declaration.identifier, dynamic, constant, declaration.expression);
     }
@@ -326,6 +323,15 @@ public class Parser
 
         throw new ParserException(
             $"Expected [{kind}] but found [{Current().kind}]", Current());
+    }
+
+    private Statement RequestSemicolon(Func<Statement> func)
+    {
+        var statement = func.Invoke();
+
+        MoveAndExpect(TokenKind.Semicolon);
+
+        return statement;
     }
 
     #endregion
