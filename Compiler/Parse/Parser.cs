@@ -29,7 +29,7 @@ public class Parser
         {
             TokenKind.OpenBrace => ParseScopeStatement(),
             TokenKind.Var
-                => RequestSemicolon(ParseVariableStatement),
+                => RequestSemicolon(ParseVarVariableStatement),
             _ => ParseExpression(),
         };
     }
@@ -59,30 +59,9 @@ public class Parser
         return new ScopeStatement(list);
     }
 
-    private VariableStatement ParseVariableStatement()
+    private Statement ParseVarVariableStatement()
     {
-        (string identifier, NodeKind value_kind, Expression? expression) declaration;
-        var dynamic = false;
-        var constant = false;
-        var kind = Move().kind; // Skip Var, Const or (Actual Type like int, float, ...) token
-
-        if (kind is TokenKind.Var)
-        {
-            dynamic = true;
-            constant = false;
-            declaration = ParseVarVariableStatement();
-        }
-        else
-        {
-            // HINT: TEMP: We will not throw any error actually 
-            throw new InterpreterException();
-        }
-
-        return new VariableStatement(declaration.identifier, dynamic, constant, declaration.expression);
-    }
-
-    private (string, NodeKind, Expression?) ParseVarVariableStatement()
-    {
+        Move(); // Skip Var token;
         var identifierToken = MoveAndExpect(TokenKind.Identifier);
         var expression = ParseVariableInitializingExpression();
         
@@ -90,7 +69,7 @@ public class Parser
         if (expression.kind is NodeKind.Null)
             throw new ParserException("Cannot initialize dynamic variable with null value");
         
-        return (identifierToken.value, expression.kind, expression);
+        return new VariableStatement(identifierToken.value, true, false, null, expression);
     }
 
     private Expression ParseVariableInitializingExpression()
